@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/locationSelectionFragment">
+
+    <fragment
+        android:id="@+id/forecastFragment"
+        android:name="uk.ac.rgu.socweather.ForecastFragment"
+        android:label="fragment_forecast"
+        tools:layout="@layout/fragment_forecast" >
+        <action
+            android:id="@+id/action_forecastFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/locationSelectionFragment"
+        android:name="uk.ac.rgu.socweather.LocationSelectionFragment"
+        android:label="fragment_location_selection"
+        tools:layout="@layout/fragment_location_selection" >
+        <action
+            android:id="@+id/action_locationSelectionFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_locationSelectionFragment_to_locationConfirmationFragment"
+            app:destination="@id/locationConfirmationFragment" />
+        <action
+            android:id="@+id/action_locationSelectionFragment_to_forecastFragment"
+            app:destination="@id/forecastFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/locationConfirmationFragment"
+        android:name="uk.ac.rgu.socweather.LocationConfirmationFragment"
+        android:label="fragment_location_confirmation"
+        tools:layout="@layout/fragment_location_confirmation" >
+        <action
+            android:id="@+id/action_locationConfirmationFragment_to_forecastFragment"
+            app:destination="@id/forecastFragment" />
+        <action
+            android:id="@+id/action_locationConfirmationFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="uk.ac.rgu.socweather.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
+</navigation>

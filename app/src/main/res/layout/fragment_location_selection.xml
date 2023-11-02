@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".LocationSelectionFragment">
+
+
+<TextView
+    android:id="@+id/tvEnterLocationLabel"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="16dp"
+    android:labelFor="@id/etEnterLocation"
+    android:text="@string/tvEnterLocationLabel"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+<EditText
+    android:id="@+id/etEnterLocation"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="8dp"
+    android:ems="10"
+    android:inputType="textPersonName"
+    android:minHeight="48dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="@+id/tvEnterLocationLabel"
+    app:layout_constraintTop_toBottomOf="@+id/tvEnterLocationLabel" />
+
+<TextView
+    android:id="@+id/tvForecastDays"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:labelFor="@id/editTextNumber"
+    android:text="@string/tvDaysForecastLabel"
+    app:layout_constraintEnd_toStartOf="@+id/editTextNumber"
+    app:layout_constraintHorizontal_bias=".5"
+    app:layout_constraintHorizontal_chainStyle="spread"
+    app:layout_constraintHorizontal_weight="2"
+    app:layout_constraintStart_toStartOf="@+id/etEnterLocation"
+    app:layout_constraintTop_toBottomOf="@+id/etEnterLocation" />
+
+<EditText
+    android:id="@+id/editTextNumber"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:ems="10"
+    android:inputType="number"
+    android:minHeight="48dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.5"
+    app:layout_constraintHorizontal_weight="1"
+    app:layout_constraintStart_toEndOf="@+id/tvForecastDays"
+    app:layout_constraintTop_toTopOf="@+id/tvForecastDays" />
+
+<Button
+    android:id="@+id/btnGetForecast"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:text="@string/btnGetForecast"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/editTextNumber" />
+
+<Button
+    android:id="@+id/btnGpsForecast"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:text="@string/btnGpsForecast"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/tvGpsLocation" />
+
+<TextView
+    android:id="@+id/tvGpsLocation"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:text="@string/tvGpsLabel"
+    app:layout_constraintStart_toStartOf="@+id/tvForecastDays"
+    app:layout_constraintTop_toBottomOf="@+id/btnGetForecast" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

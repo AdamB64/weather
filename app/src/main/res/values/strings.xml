@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">SoCWeather</string>
+    <string name="str_tv_message">%1$d Celsius</string>
+
+    <!-- main / home page -->
+    <string name="tvEnterLocationLabel">Enter a location for the forecast.</string>
+    <string name="etEnterLocation">where?</string>
+    <string name="tvDaysForecastLabel">How many days in the future would you like the forecast for\?</string>
+    <string name="etDaysForecast"></string>
+    <string name="btnGetForecast">Get forecast</string>`
+    <string name="tvGpsLabel">Get the forecast for your current location</string>
+    <string name="btnGpsForecast">Get forecast for here</string>
+
+    <!-- Location Confirmation fragment -->
+    <string name="tvConfirmLocationLabel">Please confirm the location you want from the options below.</string>
+
+    <string name="btnGetForecastLocationConfirm">Get forecast</string>
+
+    <!-- Forecast fragment -->
+    <string name="tvForecastLabel">Forecast for </string>
+    <string name="btnShowLocationMap">Show on map</string>
+    <string name="btnCheckForecastOnline">Check forecast online</string>
+    <string name="btnShareForecast">Share forecast</string>
+
+    <!-- Settings fragment -->
+    <string name="tvSettings">Settings</string>
+    <string name="spSettingsUnits">Display temperature in</string>
+    <string name="btnSaveSettings">Store</string>
+    <string-array name="spSettingsUnitsOptions">
+        <item>Celcius</item>
+        <item>Farenheit</item>
+        <item>Kelvin</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!-- menu item -->
+    <string name="mi_appBarSettings">Settings</string>
+    <string name="mi_bottomNavLocationSelection">Home</string>
+    <string name="mi_bottomNavSettings">Settings</string>
+</resources>
