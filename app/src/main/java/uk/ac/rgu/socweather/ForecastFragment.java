@@ -5,11 +5,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -157,17 +160,29 @@ public class ForecastFragment extends Fragment {
                         }
                     }
                 }catch(JSONException e){
+                    //display an error on the toast and lable text view
                     Toast.makeText(getContext(),R.string.error_passing_forecast,Toast.LENGTH_LONG);
+                    ((TextView)getActivity().findViewById(R.id.tvForecastLabel)).setText(R.string.error_passing_forecast);
                     e.printStackTrace();
                 } finally {
                     //do something with the forecast that have been downloaded
                     Log.e(TAG, "download "+forecastList.size()+" forecast" );
+                    ProgressBar pg =getActivity().findViewById(R.id.pb_forecastfragment);
+                    pg.setVisibility(View.GONE);
+                    //display the forecast list
+                    RecyclerView rv = getActivity().findViewById(R.id.recyclerView);
+                    rv.setVisibility(View.VISIBLE);
+                    //enable buttons for sharing
+                    getActivity().findViewById(R.id.btnShareForecast).setEnabled(true);
+                    getActivity().findViewById(R.id.btnShowLocationMap).setEnabled(true);
+                    getActivity().findViewById(R.id.btnCheckForecastOnline).setEnabled(true);
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(getContext(),R.string.error_parsing_weather,Toast.LENGTH_LONG);
+                ((TextView)getActivity().findViewById(R.id.tvForecastLabel)).setText(R.string.error_parsing_weather);
                 Log.d("download", "error with download: ");
                 //Display error to user
             }
