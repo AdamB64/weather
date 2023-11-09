@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,10 +18,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
+import java.util.List;
+
+import uk.ac.rgu.socweather.data.HourForecast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +37,8 @@ import java.util.Iterator;
  */
 public class ForecastFragment extends Fragment {
 
+
+    private static final String TAG = "forecast2";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -84,29 +94,87 @@ public class ForecastFragment extends Fragment {
     private void downloadForecast(){
         String url ="https://api.weatherapi.com/v1/forecast.json?key=a3b9cc3fb35943d5826152257210311&q=Aberdeen&days=3";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+
+
             @Override
             public void onResponse(String response) {
+                //for formatting the date of the forecast
+                SimpleDateFormat sdf=new SimpleDateFormat(getString(R.string.forecast_date_format));
+
+                //for storing all the weather forecast
+                List<HourForecast> forecastList=new ArrayList<HourForecast>(24*5);
+
                 try {
+
+
+
+                    //convert text response to a json object for procession
                     JSONObject jsonObject = new JSONObject(response);
-                    JSONObject forecastOBJECT = jsonObject.getJSONObject("hour");
-                    for(Iterator<String> it = forecastOBJECT.keys(); it.hasNext();){
-                        String forecast = it.next();
-                        JSONObject forecastObject =forecastOBJECT.getJSONObject(forecast);
-                        String time =forecastObject.getString("time");
-                        Log.d("onResponse: ",time);
+                    //get forecast value
+                    JSONObject forecastOBJECT = jsonObject.getJSONObject("forecast");
+                    //get forecast day
+                    JSONArray forecastdayArray = forecastOBJECT.getJSONArray("forecastday");
+                    for (int i=0,j=forecastdayArray.length(); i<j; i++){
+                        //get the day at postion i
+                        JSONObject dayObject=forecastdayArray.getJSONObject(i);
+                        //from the day get the hour array
+                        JSONArray hourArray = dayObject.getJSONArray("hour");
+                        //get the hours forecast
+                        for(int ii=0,jj=hourArray.length();ii<jj;ii++){
+                            //get the forecast hour object
+                            JSONObject forecastHourObject = hourArray.getJSONObject(ii);
+                            //now extract the forecast info
+                            double temperature = forecastHourObject.getDouble("temp_c");
+                            int humidity = forecastHourObject.getInt("humidity");
+                            //get the condition object to work out the weather description
+                            JSONObject conditionObject =forecastHourObject.getJSONObject("condition");
+                            //get the weather description
+                            String weather = conditionObject.getString("text");
+                            //get the weather icon
+                            String weatherIcon=conditionObject.getString("icon");
+
+                            //work out the date and time
+                            long timeEpoch=forecastHourObject.getLong("time_epoch");
+                            Calendar calendar=Calendar.getInstance();
+                            // the time in the forecast json is in seconds so conbert to milliseconds
+                            calendar.setTimeInMillis(timeEpoch*1000);
+
+                            int hourOfDay =calendar.get(Calendar.HOUR_OF_DAY);
+                            //format the date for display
+                            String dateMonth= sdf.format(calendar.getTime());
+
+                            //create the HourForecast domain object for this hour
+                            HourForecast hourForecast =new HourForecast();
+                            hourForecast.setTemperature(temperature);
+                            hourForecast.setHumidity(humidity);
+                            hourForecast.setWeather(weather);
+                            hourForecast.setIconURL(weatherIcon);
+                            hourForecast.setHour(hourOfDay);
+                            hourForecast.setDate(dateMonth);
+
+                            //add this hour forecast to the list
+                            forecastList.add(hourForecast);
+                        }
                     }
                 }catch(JSONException e){
+                    Toast.makeText(getContext(),R.string.error_passing_forecast,Toast.LENGTH_LONG);
                     e.printStackTrace();
+                } finally {
+                    //do something with the forecast that have been downloaded
+                    Log.e(TAG, "download "+forecastList.size()+" forecast" );
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(),R.string.error_parsing_weather,Toast.LENGTH_LONG);
                 Log.d("download", "error with download: ");
                 //Display error to user
             }
         });
+        //create a new request queue
         RequestQueue queue = Volley.newRequestQueue(getContext());
+        //add the request to make it
         queue.add(stringRequest);
     }
 }

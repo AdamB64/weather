@@ -39,4 +39,7 @@
     <string name="mi_appBarSettings">Settings</string>
     <string name="mi_bottomNavLocationSelection">Home</string>
     <string name="mi_bottomNavSettings">Settings</string>
+    <string name="error_passing_forecast">error passing the weather forecast</string>
+    <string name="error_parsing_weather">Error parsing the weather forecast</string>
+    <string name="forecast_date_format">dd-MMM</string>
 </resources>

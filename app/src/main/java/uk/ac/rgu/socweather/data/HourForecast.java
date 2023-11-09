@@ -6,7 +6,7 @@ package uk.ac.rgu.socweather.data;
 public class HourForecast {
 
     // the forecasted temp in degress celcius
-    private int temperature;
+    private double temperature;
 
     // the forecasted humidity in % (between 0 and 100)
     private int humidity;
@@ -20,17 +20,28 @@ public class HourForecast {
     // the weather description
     private String weather;
 
+    public String getIconURL() {
+        return iconURL;
+    }
+
+    public void setIconURL(String iconURL) {
+        this.iconURL = iconURL;
+    }
+
+    //the weather icon
+    private String iconURL;
+
     /**
      * Default constructor
      */
     public HourForecast() {
     }
 
-    public int getTemperature() {
+    public double getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(int temperature) {
+    public void setTemperature(double temperature) {
         this.temperature = temperature;
     }
 
