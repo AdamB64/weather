@@ -1,11 +1,26 @@
 package uk.ac.rgu.socweather;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Iterator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,4 +75,39 @@ public class ForecastFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_forecast, container, false);
     }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        downloadForecast();
+    }
+
+    private void downloadForecast(){
+        String url ="https://api.weatherapi.com/v1/forecast.json?key=a3b9cc3fb35943d5826152257210311&q=Aberdeen&days=3";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONObject forecastOBJECT = jsonObject.getJSONObject("hour");
+                    for(Iterator<String> it = forecastOBJECT.keys(); it.hasNext();){
+                        String forecast = it.next();
+                        JSONObject forecastObject =forecastOBJECT.getJSONObject(forecast);
+                        String time =forecastObject.getString("time");
+                        Log.d("onResponse: ",time);
+                    }
+                }catch(JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("download", "error with download: ");
+                //Display error to user
+            }
+        });
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        queue.add(stringRequest);
+    }
 }
+
