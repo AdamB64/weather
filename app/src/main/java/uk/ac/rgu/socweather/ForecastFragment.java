@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
@@ -177,13 +178,16 @@ public class ForecastFragment extends Fragment {
                     pg.setVisibility(View.GONE);
                     if (forecastList.size()>0) {
                         //set up the adapter with the data
-                        mlistAdapter=new HourForecastArrayAdapter(getContext(), R.layout.hour_forecast_list_item,forecastList);
-                        mlistAdapter.notifyDataSetChanged();
+
 
                         //display the forecast list
-                        ListView lv = getActivity().findViewById(R.id.LvForecast);
-                        lv.setAdapter(mlistAdapter);
-                        lv.setVisibility(View.VISIBLE);
+                        RecyclerView rv= getActivity().findViewById(R.id.RvForecast);
+
+                        ForecastRecyclerViewAdapter adapter=new ForecastRecyclerViewAdapter(getContext(),forecastList);
+
+                        rv.setAdapter(adapter);
+                        rv.setLayoutManager(new LinearLayoutManager(getContext()));
+                        rv.setVisibility(View.VISIBLE);
 
                         //add the content of forcast list to list view
                         //ArrayAdapter<HourForecast> adapter = new ArrayAdapter<HourForecast>(getContext(),
