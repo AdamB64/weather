@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +52,10 @@ public class ForecastFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+
+    //the adapter used by the ListView
+    private HourForecastArrayAdapter mlistAdapter;
 
     public ForecastFragment() {
         // Required empty public constructor
@@ -169,13 +175,28 @@ public class ForecastFragment extends Fragment {
                     Log.e(TAG, "download "+forecastList.size()+" forecast" );
                     ProgressBar pg =getActivity().findViewById(R.id.pb_forecastfragment);
                     pg.setVisibility(View.GONE);
-                    //display the forecast list
-                    RecyclerView rv = getActivity().findViewById(R.id.recyclerView);
-                    rv.setVisibility(View.VISIBLE);
-                    //enable buttons for sharing
-                    getActivity().findViewById(R.id.btnShareForecast).setEnabled(true);
-                    getActivity().findViewById(R.id.btnShowLocationMap).setEnabled(true);
-                    getActivity().findViewById(R.id.btnCheckForecastOnline).setEnabled(true);
+                    if (forecastList.size()>0) {
+                        //set up the adapter with the data
+                        mlistAdapter=new HourForecastArrayAdapter(getContext(), R.layout.hour_forecast_list_item,forecastList);
+                        mlistAdapter.notifyDataSetChanged();
+
+                        //display the forecast list
+                        ListView lv = getActivity().findViewById(R.id.LvForecast);
+                        lv.setAdapter(mlistAdapter);
+                        lv.setVisibility(View.VISIBLE);
+
+                        //add the content of forcast list to list view
+                        //ArrayAdapter<HourForecast> adapter = new ArrayAdapter<HourForecast>(getContext(),
+                                //android.R.layout.simple_list_item_1,
+                                //forecastList);
+                        //lv.setAdapter(adapter);
+
+                        //enable buttons for sharing
+                        getActivity().findViewById(R.id.btnShareForecast).setEnabled(true);
+                        getActivity().findViewById(R.id.btnShowLocationMap).setEnabled(true);
+                        getActivity().findViewById(R.id.btnCheckForecastOnline).setEnabled(true);
+                        Log.e(TAG, "onResponse: "+forecastList);
+                    }
                 }
             }
         }, new Response.ErrorListener() {

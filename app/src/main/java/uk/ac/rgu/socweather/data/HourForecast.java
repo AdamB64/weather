@@ -76,4 +76,16 @@ public class HourForecast {
     public void setWeather(String weather) {
         this.weather = weather;
     }
+
+    @Override
+    public String toString() {
+        return "HourForecast{" +
+                "temperature=" + temperature +
+                ", humidity=" + humidity +
+                ", hour=" + hour +
+                ", date='" + date + '\'' +
+                ", weather='" + weather + '\'' +
+                ", iconURL='" + iconURL + '\'' +
+                '}';
+    }
 }
