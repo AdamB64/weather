@@ -13,11 +13,17 @@
 
     <!-- Location Confirmation fragment -->
     <string name="tvConfirmLocationLabel">Please confirm the location you want from the options below.</string>
+    <string name="tvConfirmLocationLabelLoading">Searching for locations like %1$s.</string>
 
-    <string name="btnGetForecastLocationConfirm">Get forecast</string>
+    <string name="btnGetForecastLocationConfirm">Get forecast RecyclerView</string>
+    <string name="error_downloading_locations">Error getting locations from the WeatherAPI</string>
+    <string name="get_forecast_basic_listview">Get Forecast Basic ListView</string>
+    <string name="get_forecast_custom_listview">Get Forecast Custom ListView</string>
+    <string name="tv_confirm_location_no_locations">No locations found matching %1$s</string>
 
     <!-- Forecast fragment -->
-    <string name="tvForecastLabel">Forecast for </string>
+    <string name="tvForecastLabelLoading">Getting forecast for %1$s </string>
+    <string name="tvForecastLabel">Forecast for %1$s </string>
     <string name="btnShowLocationMap">Show on map</string>
     <string name="btnCheckForecastOnline">Check forecast online</string>
     <string name="btnShareForecast">Share forecast</string>
@@ -39,17 +45,17 @@
     <string name="mi_appBarSettings">Settings</string>
     <string name="mi_bottomNavLocationSelection">Home</string>
     <string name="mi_bottomNavSettings">Settings</string>
-    <string name="error_passing_forecast">error passing the weather forecast</string>
-    <string name="error_parsing_weather">Error parsing the weather forecast</string>
+    <string name="error_parsing_forecast">Error parsing the weather forecast</string>
+    <string name="error_downloading_forecast">Error getting the weather forecast</string>
     <string name="forecast_date_format">dd-MMM</string>
 
 
-    <!-- hour forcast list item-->
+    <!-- hour forecast list item -->
     <string name="tv_forecast_item_hour">%1$d:00</string>
-    <string name="tv_forecast_item_temp">%1$s \u0080C</string>
+    <string name="tv_forecast_item_temp">%1$s \u00B0C</string>
     <string name="tv_forecast_item_humidity">%1$d %%</string>
 
-    <!-- error message for checking user input-->
-    <string name="Toast_enter_num_days_error">Please specify the number of days to get the forecast for</string>
-    <string name="Toast_Provide_location_error">Please provide a location</string>
+    <!-- error message for checking user input -->
+    <string name="toast_enter_num_days_error">Please specify the number of days to get the forecast for</string>
+    <string name="toast_provide_location_error">Please provide a location</string>
 </resources>

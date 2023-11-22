@@ -20,6 +20,9 @@ public class HourForecast {
     // the weather description
     private String weather;
 
+    // the weather icon
+    private String iconURL;
+
     public String getIconURL() {
         return iconURL;
     }
@@ -27,9 +30,6 @@ public class HourForecast {
     public void setIconURL(String iconURL) {
         this.iconURL = iconURL;
     }
-
-    //the weather icon
-    private String iconURL;
 
     /**
      * Default constructor

@@ -1,7 +1,5 @@
 package uk.ac.rgu.socweather;
 
-import static uk.ac.rgu.socweather.R.string.tv_forecast_item_humidity;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,37 +15,27 @@ import java.util.List;
 import uk.ac.rgu.socweather.data.HourForecast;
 
 /**
- *  Array adapter for listview to diaplsy hour forecast object
+ * ArrayAdapter for {@link android.widget.ListView}s to display {@link HourForecast} objects
  */
+import uk.ac.rgu.socweather.data.HourForecast;
 
-public class HourForecastArrayAdapter extends ArrayAdapter<HourForecast>{
-    //the data to be displayed
-    private List<HourForecast> mhourforecast;
+/**
+ * ArrayAdapter for {@link android.widget.ListView}s to display {@link HourForecast} objects
+ */
+public class HourForecastArrayAdapter extends ArrayAdapter<HourForecast> {
 
-    /*
-     *Create a new {@Link HourForecastArrayAdapter} to display objects
-     * @param content
-     * @param resource
-     */
-    //public HourForecastArrayAdapter(@NonNull Context context, int resource) {
-       // super(context, resource);
-    //}
+    // the data to be displayed
+    private List<HourForecast> mHourForecasts;
+
 
     /**
-     * sets the data to be displayed
-     */
-    //public void sethourforecast(List<HourForecast> hourForecasts){
-    //    this.mhourforecast=hourForecasts;
-    //}
-
-    /*
-    *Create a new {@Link HourForecastArrayAdapter} to display objects
-    * @param content
-    * @param resouce
-    * @param objects the {@Link HourForecast} object to be displayed
+     * Create a new {@link HourForecastArrayAdapter} to display objects
+     * @param context
+     * @param resource
+     * @param objects The {@link HourForecast} objects to be displayed
      */
     public HourForecastArrayAdapter(@NonNull Context context, int resource, List<HourForecast> objects) {
-        super(context, resource,objects);
+        super(context, resource, objects);
     }
 
     /**
@@ -60,15 +48,13 @@ public class HourForecastArrayAdapter extends ArrayAdapter<HourForecast>{
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        //we need to set up convertView to display this.mHourForecast.get(position)
-        View itemview =convertView;
-        if (itemview==null){
-            itemview= LayoutInflater.from(getContext()).inflate(R.layout.hour_forecast_list_item,parent,false);
-        }
+        // we need to setup convertView to display this.mHourForecasts.get(position)
 
-        //if(this.mhourforecast==null){
-            //return itemview;
-        //}
+        // get the view that will be used to display the weather forecast
+        View itemView = convertView;
+        if (itemView == null){
+            itemView = LayoutInflater.from(getContext()).inflate(R.layout.hour_forecast_list_item, parent,false );
+        }
 
         // get the HourForecast to display
         HourForecast hourForecast = getItem(position);
@@ -76,17 +62,17 @@ public class HourForecastArrayAdapter extends ArrayAdapter<HourForecast>{
         // update itemView
 
         // with the date
-        TextView tvDate = itemview.findViewById(R.id.tvForecastDate);
+        TextView tvDate = itemView.findViewById(R.id.tvForecastDate);
         tvDate.setText(hourForecast.getDate());
 
         // with the time
-        TextView tvTime = itemview.findViewById(R.id.tvForecastTime);
+        TextView tvTime = itemView.findViewById(R.id.tvForecastTime);
         String strTime = getContext().getString(R.string.tv_forecast_item_hour,hourForecast.getHour());
         tvTime.setText(strTime);
 
         // with the temperature
         ((TextView)
-                itemview.findViewById(R.id.tvForecastTemp))
+                itemView.findViewById(R.id.tvForecastTemp))
                 .setText(
                         getContext().getString(
                                 R.string.tv_forecast_item_temp,
@@ -94,16 +80,16 @@ public class HourForecastArrayAdapter extends ArrayAdapter<HourForecast>{
 
         // with the humidity
         ((TextView)
-                itemview.findViewById(R.id.tvForecastHumidity))
+                itemView.findViewById(R.id.tvForecastHumidity))
                 .setText(
                         getContext().getString(
                                 R.string.tv_forecast_item_humidity,
                                 hourForecast.getHumidity()));
         // with the weather
         ((TextView)
-                itemview.findViewById(R.id.tvForecastWeather))
+                itemView.findViewById(R.id.tvForecastWeather))
                 .setText(hourForecast.getWeather());
 
-        return itemview;
+        return itemView;
     }
 }

@@ -1,19 +1,22 @@
 package uk.ac.rgu.socweather;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,23 +38,27 @@ import uk.ac.rgu.socweather.data.HourForecast;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ForecastFragment#newInstance} factory method to
+ * Use the {@link CustomListViewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ForecastFragment extends Fragment{
+public class CustomListViewFragment extends Fragment {
 
     // tag for loggging message
     private static final String TAG = "ForecastFragment";
 
-    // parameter argument names
-    public static final String ARG_PARAM_LOCATION = LocationConfirmationFragment.ARG_PARAM_LOCATION;
-    public static final String ARG_PARAM_NUMBER_OF_DAYS = LocationConfirmationFragment.ARG_PARAM_NUMBER_OF_DAYS;
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
-    // paramaters
-    private String mLocation;
-    private int mNumberOfDays;
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
 
-    public ForecastFragment() {
+    // the adapter being used by the ListView
+    private HourForecastArrayAdapter mListAdapter;
+
+    public CustomListViewFragment() {
         // Required empty public constructor
     }
 
@@ -59,16 +66,16 @@ public class ForecastFragment extends Fragment{
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param location The location to display the forecast for
-     * @param numberOfDays The number of days to get the forecast for.
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
      * @return A new instance of fragment ForecastFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ForecastFragment newInstance(String location, int numberOfDays) {
-        ForecastFragment fragment = new ForecastFragment();
+    public static uk.ac.rgu.socweather.ForecastFragment newInstance(String param1, String param2) {
+        uk.ac.rgu.socweather.ForecastFragment fragment = new uk.ac.rgu.socweather.ForecastFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM_LOCATION, location);
-        args.putInt(ARG_PARAM_NUMBER_OF_DAYS, numberOfDays);
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -77,30 +84,28 @@ public class ForecastFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            this.mLocation = getArguments().getString(ARG_PARAM_LOCATION);
-            this.mNumberOfDays = getArguments().getInt(ARG_PARAM_NUMBER_OF_DAYS);
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_forecast, container, false);
+        return inflater.inflate(R.layout.fragment_custom_list_view, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // update the tvForecastLabel text
-        TextView tvForecastLabel = getActivity().findViewById(R.id.tvForecastLabel);
-        tvForecastLabel.setText(getContext().getString(R.string.tvForecastLabelLoading,mLocation));
-
         downloadForecast();
     }
 
-    private void downloadForecast(){
-        String url = String.format("https://api.weatherapi.com/v1/forecast.json?key=a3b9cc3fb35943d5826152257210311&q=%s&days=%d", this.mLocation, this.mNumberOfDays);
+    private void downloadForecast() {
+        String url = "https://api.weatherapi.com/v1/forecast.json?key=a3b9cc3fb35943d5826152257210311&q=Aberdeen&days=3";
+
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -109,7 +114,7 @@ public class ForecastFragment extends Fragment{
                 SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.forecast_date_format));
 
                 // for storing all the weather forecast
-                List<HourForecast> forecastList = new ArrayList<HourForecast>(24*5);
+                List<HourForecast> forecastList = new ArrayList<HourForecast>(24 * 5);
 
                 try {
                     // convert text response to a JSON object for processing
@@ -119,12 +124,12 @@ public class ForecastFragment extends Fragment{
                     // get the forecast day value - an array of days
                     JSONArray forecastDayArray = forecastObject.getJSONArray("forecastday");
                     // for every forecast day
-                    for (int i = 0, j = forecastDayArray.length(); i<j; i++){
+                    for (int i = 0, j = forecastDayArray.length(); i < j; i++) {
                         // get the day at position i
                         JSONObject dayObject = forecastDayArray.getJSONObject(i);
                         // from the day, get the hour array
                         JSONArray hourArray = dayObject.getJSONArray("hour");
-                        for (int ii = 0, jj = hourArray.length(); ii < jj; ii++){
+                        for (int ii = 0, jj = hourArray.length(); ii < jj; ii++) {
                             // get the forecast hour object
                             JSONObject forecastHourObject = hourArray.getJSONObject(ii);
                             // now extract the forecast info
@@ -141,7 +146,7 @@ public class ForecastFragment extends Fragment{
                             long timeEpoch = forecastHourObject.getLong("time_epoch");
                             Calendar calendar = Calendar.getInstance();
                             // the time in the forecast json is in seconds, so convert to millisecond
-                            calendar.setTimeInMillis(timeEpoch*1000);
+                            calendar.setTimeInMillis(timeEpoch * 1000);
 
                             int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
                             // format the date for display
@@ -162,8 +167,8 @@ public class ForecastFragment extends Fragment{
                     }
                 } catch (JSONException e) {
                     // display an error on the Toast and label text view
-                    Toast.makeText(getContext(), R.string.error_parsing_forecast, Toast.LENGTH_LONG );
-                    ((TextView)getActivity().findViewById(R.id.tvForecastLabel)).setText(R.string.error_parsing_forecast);
+                    Toast.makeText(getContext(), R.string.error_parsing_forecast, Toast.LENGTH_LONG);
+                    ((TextView) getActivity().findViewById(R.id.tvForecastLabel)).setText(R.string.error_parsing_forecast);
 
                     Log.d(TAG, "Parsing JSON error" + e.getLocalizedMessage());
                     e.printStackTrace();
@@ -176,19 +181,14 @@ public class ForecastFragment extends Fragment{
 
                     // if we have some data, then enable the relevant Views
                     if (forecastList.size() > 0) {
+                        // setup the adapter with the data
+                        mListAdapter = new HourForecastArrayAdapter(getContext(), R.layout.hour_forecast_list_item, forecastList);
+                        mListAdapter.notifyDataSetChanged();
+
                         // display the forecast list
-                        RecyclerView rv = getActivity().findViewById(R.id.rvForecast);
-
-                        ForecastRecyclerViewAdapter adapter = new ForecastRecyclerViewAdapter(getContext(), forecastList);
-
-                        rv.setAdapter(adapter);
-                        rv.setLayoutManager(new LinearLayoutManager(getContext()));
-                        rv.setVisibility(View.VISIBLE);
-
-                        // update the tvForecastLabel text
-                        TextView tvForecastLabel = getActivity().findViewById(R.id.tvForecastLabel);
-                        tvForecastLabel.setText(getContext().getString(R.string.tvForecastLabel,mLocation));
-
+                        ListView lv = getActivity().findViewById(R.id.lvCustomForecast);
+                        lv.setAdapter(mListAdapter);
+                        lv.setVisibility(View.VISIBLE);
                         // enable the buttons for sharing
                         getActivity().findViewById(R.id.btnShareForecast).setEnabled(true);
                         getActivity().findViewById(R.id.btnShowLocationMap).setEnabled(true);
@@ -199,8 +199,8 @@ public class ForecastFragment extends Fragment{
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getContext(), R.string.error_downloading_forecast, Toast.LENGTH_LONG );
-                ((TextView)getActivity().findViewById(R.id.tvForecastLabel)).setText(R.string.error_downloading_forecast);
+                Toast.makeText(getContext(), R.string.error_downloading_forecast, Toast.LENGTH_LONG);
+                ((TextView) getActivity().findViewById(R.id.tvForecastLabel)).setText(R.string.error_downloading_forecast);
                 Log.e(TAG, "Error downloading " + error.getMessage());
             }
         });

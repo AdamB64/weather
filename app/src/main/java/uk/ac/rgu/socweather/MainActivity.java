@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         // handle settings item selection
-        if  (item.getItemId() == R.id.mi_appBarSetting) {
+       if (item.getItemId()  == R.id.mi_appBarSetting){
             NavController navController = Navigation.findNavController(findViewById(R.id.fragmentContainerView));
             // work out where the user currently is
             int currentFragmentId = navController.getCurrentDestination().getId();
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             }
             return super.onOptionsItemSelected(item);
         } else {
-                return super.onOptionsItemSelected(item);
+           return super.onOptionsItemSelected(item);
         }
 
 
@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                     navController.navigate(R.id.settingsFragment);
                     return true;
                 }
-
         }
         return false;
     }

@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -22,6 +21,7 @@ import android.widget.Toast;
  * create an instance of this fragment.
  */
 public class LocationSelectionFragment extends Fragment implements View.OnClickListener {
+
 
     public LocationSelectionFragment() {
         // Required empty public constructor
@@ -36,8 +36,6 @@ public class LocationSelectionFragment extends Fragment implements View.OnClickL
     // TODO: Rename and change types and number of parameters
     public static LocationSelectionFragment newInstance() {
         LocationSelectionFragment fragment = new LocationSelectionFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -68,43 +66,46 @@ public class LocationSelectionFragment extends Fragment implements View.OnClickL
     @Override
     public void onClick(View view) {
         // get the nav contoller
-       NavController navController = Navigation.findNavController(view);
+        NavController navController = Navigation.findNavController(view);
 
-           //get the number of days to get the forecast for
-            EditText etNumberOfDays = getActivity().findViewById(R.id.editTextNumber);
-            String etNumberOfDaysString = etNumberOfDays.getText().toString();
-            if("".equals(etNumberOfDaysString)){
-                //should probably change the text colour of the relevant field
-                //but for now will just display a Toast message
-                Toast.makeText(getContext(), R.string.Toast_enter_num_days_error, Toast.LENGTH_LONG).show();
+        // TODO: get the number of days to get the forecast for
+        // get the number of days to get the forecast for
+        EditText etNumberOfDays = getActivity().findViewById(R.id.editTextNumber);
+        String etNumberOfDaysString = etNumberOfDays.getText().toString();
+        // checking something has been entered
+        if ("".equals(etNumberOfDaysString)){
+            // should probably do something here like change the text colour of the relevant field
+            // but for not just display a Toast message
+            Toast.makeText(getContext(), R.string.toast_enter_num_days_error, Toast.LENGTH_LONG).show();
+            return;
+        }
+        int numberOfDays = Integer.parseInt(etNumberOfDaysString);
+
+
+        if (view.getId() == R.id.btnGetForecast) {
+            // check / get the location entered
+            String locationEntered = ((EditText)getActivity().findViewById(R.id.etEnterLocation)).getText().toString();
+            if ("".equals(locationEntered)){
+                // should probably do something here like change the text colour of the relevant field
+                // but for not just display a Toast message
+                Toast.makeText(getContext(), R.string.toast_provide_location_error, Toast.LENGTH_LONG).show();
                 return;
             }
-            int numberOfDays = Integer.parseInt(etNumberOfDaysString);
 
-         if (view.getId() ==R.id.btnGetForecast) {
-             //check / get the location entered
-             String locationEntered= ((EditText)getActivity().findViewById(R.id.etEnterLocation)).getText().toString();
-             if("".equals(locationEntered)){
-                 //should probably change the text colour of the relevant field
-                 //but for now will just display a Toast message
-                 Toast.makeText(getContext(), R.string.Toast_Provide_location_error, Toast.LENGTH_LONG).show();
-                 return;
-             }
+            // build the bundle to send
+            Bundle bundle = new Bundle();
+            bundle.putString(LocationConfirmationFragment.ARG_PARAM_LOCATION, locationEntered);
+            bundle.putInt(LocationConfirmationFragment.ARG_PARAM_NUMBER_OF_DAYS, numberOfDays);
 
-             //build the bundle to send
-             Bundle bundle = new Bundle();
-             bundle.putString(LocationConfirmationFragment.ARG_PARAM_LOCATION,locationEntered);
-             bundle.putInt(LocationConfirmationFragment.ARG_PARAM_NUMBER_OF_DAYS,numberOfDays);
+            // navigate to the LocationConfirmationFragment
+            navController.navigate(R.id.action_locationSelectionFragment_to_locationConfirmationFragment, bundle);
 
+        } else if (view.getId() == R.id.btnGpsForecast){
+            // TODO: get the location from GPS
+            // navigate to the Forecast Fragment
+            navController.navigate(R.id.action_locationSelectionFragment_to_forecastFragment);
 
-             // navigate to the LocationConfirmationFragment
-             navController.navigate(R.id.action_locationSelectionFragment_to_locationConfirmationFragment, bundle);
-
-         } else if (view.getId() == R.id.btnGpsForecast) {
-             // TODO: get the location from GPS
-             // navigate to the Forecast Fragment
-             navController.navigate(R.id.action_locationSelectionFragment_to_forecastFragment);
-         }
+        }
 
     }
 }

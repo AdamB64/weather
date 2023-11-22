@@ -17,7 +17,7 @@
             android:name="location"
             app:argType="string" />
         <argument
-            android:name="numberOfDay"
+            android:name="numberOfDays"
             app:argType="integer" />
     </fragment>
     <fragment
@@ -46,6 +46,12 @@
         <action
             android:id="@+id/action_locationConfirmationFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_locationConfirmationFragment_to_basicListViewFragment"
+            app:destination="@id/basicListViewFragment" />
+        <action
+            android:id="@+id/action_locationConfirmationFragment_to_customListViewFragment"
+            app:destination="@id/customListViewFragment" />
         <argument
             android:name="location"
             app:argType="string" />
@@ -58,4 +64,14 @@
         android:name="uk.ac.rgu.socweather.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/basicListViewFragment"
+        android:name="uk.ac.rgu.socweather.BasicListViewFragment"
+        android:label="fragment_basic_list_view"
+        tools:layout="@layout/fragment_basic_list_view" />
+    <fragment
+        android:id="@+id/customListViewFragment"
+        android:name="uk.ac.rgu.socweather.CustomListViewFragment"
+        android:label="fragment_custom_list_view"
+        tools:layout="@layout/fragment_custom_list_view" />
 </navigation>

@@ -1,12 +1,10 @@
 package uk.ac.rgu.socweather;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -72,8 +70,14 @@ public class LocationConfirmationFragment extends Fragment implements View.OnCli
         // for navigate to the forecast fragment
         Button btnGetForecastLocationConfirm = view.findViewById(R.id.btnGetForecastLocationConfirm);
         btnGetForecastLocationConfirm.setOnClickListener(this);
-    }
 
+        // add click listeners for alernative lists
+        Button btnBasicListView = view.findViewById(R.id.btnGetForecastBasicList);
+        btnBasicListView.setOnClickListener(this);
+
+        Button btnCustomListView = view.findViewById(R.id.btnGetForecastCustomList);
+        btnCustomListView.setOnClickListener(this);
+    }
 
     @Override
     public void onClick(View view) {
@@ -85,6 +89,10 @@ public class LocationConfirmationFragment extends Fragment implements View.OnCli
         if (view.getId() == R.id.btnGetForecastLocationConfirm){
             // navigate to the forecast fragment
             Navigation.findNavController(view).navigate(R.id.action_locationConfirmationFragment_to_forecastFragment, bundle);
+        } else if (view.getId() == R.id.btnGetForecastBasicList){
+            Navigation.findNavController(view).navigate(R.id.action_locationConfirmationFragment_to_basicListViewFragment, bundle);
+        }  else if (view.getId() == R.id.btnGetForecastCustomList){
+            Navigation.findNavController(view).navigate(R.id.action_locationConfirmationFragment_to_customListViewFragment, bundle);
         }
     }
 }
