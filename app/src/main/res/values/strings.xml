@@ -48,4 +48,8 @@
     <string name="tv_forecast_item_hour">%1$d:00</string>
     <string name="tv_forecast_item_temp">%1$s \u0080C</string>
     <string name="tv_forecast_item_humidity">%1$d %%</string>
+
+    <!-- error message for checking user input-->
+    <string name="Toast_enter_num_days_error">Please specify the number of days to get the forecast for</string>
+    <string name="Toast_Provide_location_error">Please provide a location</string>
 </resources>

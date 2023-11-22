@@ -13,6 +13,12 @@
         <action
             android:id="@+id/action_forecastFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <argument
+            android:name="location"
+            app:argType="string" />
+        <argument
+            android:name="numberOfDay"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/locationSelectionFragment"
@@ -40,6 +46,12 @@
         <action
             android:id="@+id/action_locationConfirmationFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <argument
+            android:name="location"
+            app:argType="string" />
+        <argument
+            android:name="numberOfDays"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

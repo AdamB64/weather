@@ -41,22 +41,18 @@ import uk.ac.rgu.socweather.data.HourForecast;
  * Use the {@link ForecastFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ForecastFragment extends Fragment {
+public class ForecastFragment extends Fragment{
 
 
     private static final String TAG = "forecast2";
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    public static final String ARG_PARAM_LOCATION = LocationConfirmationFragment.ARG_PARAM_LOCATION;
+    public static final String ARG_PARAM_NUMBER_OF_DAYS = LocationConfirmationFragment.ARG_PARAM_NUMBER_OF_DAYS;
 
+    //parameters
+    private String mLocation;
+    private int mNumberOfDays;
 
-    //the adapter used by the ListView
-    private HourForecastArrayAdapter mlistAdapter;
 
     public ForecastFragment() {
         // Required empty public constructor
@@ -66,16 +62,15 @@ public class ForecastFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param location the location of the forecast
+     * @param numberOfDays the days wanted for the forecast
      * @return A new instance of fragment ForecastFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static ForecastFragment newInstance(String param1, String param2) {
+    public static ForecastFragment newInstance(String location, int numberOfDays) {
         ForecastFragment fragment = new ForecastFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM_LOCATION, location);
+        args.putInt(ARG_PARAM_NUMBER_OF_DAYS, numberOfDays);
         fragment.setArguments(args);
         return fragment;
     }
@@ -84,8 +79,8 @@ public class ForecastFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            this.mLocation = getArguments().getString(ARG_PARAM_LOCATION);
+            this.mNumberOfDays = getArguments().getInt(ARG_PARAM_NUMBER_OF_DAYS);
         }
     }
 
@@ -102,7 +97,7 @@ public class ForecastFragment extends Fragment {
     }
 
     private void downloadForecast(){
-        String url ="https://api.weatherapi.com/v1/forecast.json?key=a3b9cc3fb35943d5826152257210311&q=Aberdeen&days=3";
+        String url =String.format("https://api.weatherapi.com/v1/forecast.json?key=a3b9cc3fb35943d5826152257210311&q=%s&days=%d",this.mLocation,this.mNumberOfDays);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
 
 
