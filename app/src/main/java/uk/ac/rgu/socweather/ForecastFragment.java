@@ -35,6 +35,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import uk.ac.rgu.socweather.data.HourForecast;
+import uk.ac.rgu.socweather.data.Utils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,6 +54,8 @@ public class ForecastFragment extends Fragment implements View.OnClickListener {
     // paramaters
     private String mLocation;
     private int mNumberOfDays;
+
+    public String forecastList;
 
     public ForecastFragment() {
         // Required empty public constructor
@@ -99,8 +102,15 @@ public class ForecastFragment extends Fragment implements View.OnClickListener {
         TextView tvForecastLabel = getActivity().findViewById(R.id.tvForecastLabel);
         tvForecastLabel.setText(getContext().getString(R.string.tvForecastLabelLoading,mLocation));
 
+        //set the action handler on the httons
         Button btnShowMap = view.findViewById(R.id.btnShowLocationMap);
         btnShowMap.setOnClickListener(this);
+
+        Button btnCheckForecastOnline = view.findViewById(R.id.btnCheckForecastOnline);
+        btnCheckForecastOnline.setOnClickListener(this);
+
+        Button btnShareForecast = view.findViewById(R.id.btnShareForecast);
+        btnShareForecast.setOnClickListener(this);
 
         downloadForecast();
     }
@@ -229,6 +239,19 @@ public class ForecastFragment extends Fragment implements View.OnClickListener {
             //if(intent.resolveActivity(getPackageManger())){
                 startActivity(intent);
             //}
+        }else if(view.getId()==R.id.btnCheckForecastOnline){
+            //launch the web browser app loading a search engine with a url
+            //searching for the weather at mlocation
+            String url="https://www.bing.com/search?";
+            Uri webpage = Utils.buildUri(url,"q",this.mLocation+" weather");
+            Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+            startActivity(intent);
+        }else if(view.getId()==R.id.btnShareForecast){
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setType("text/plain");
+            String message ="forecast for "+mLocation + "\n"+forecastList;
+            intent.putExtra("sms_body",message);
+            startActivity(intent);
         }
     }
 }
