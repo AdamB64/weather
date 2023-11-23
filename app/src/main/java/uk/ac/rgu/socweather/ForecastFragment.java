@@ -32,6 +32,8 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import uk.ac.rgu.socweather.data.HourForecast;
@@ -251,8 +253,18 @@ public class ForecastFragment extends Fragment implements View.OnClickListener {
             intent.setType("text/plain");
             String message ="forecast for "+mLocation;
             if(forecastList!=null && forecastList.size()>0){
-                HourForecast firstHour = forecastList.get(0);
-                message += String.format(" At %s it`ll be %sC ",firstHour.getHour(),String.valueOf(firstHour.getTemperature()));
+                Date date = new Date();   // given date
+                Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
+                calendar.setTime(date);   // assigns calendar to given date
+                for (int i=0,j=30; i<j; i++) {
+                    HourForecast Hour = forecastList.get(i);
+                    Log.d(TAG,"Hours1 "+Hour.getHour()+" "+calendar.HOUR_OF_DAY);
+                    int l=calendar.get(Calendar.HOUR_OF_DAY);
+                    if (Hour.getHour() == l) {
+                        message += String.format(" At %s it`ll be %sC ", Hour.getHour(), String.valueOf(Hour.getTemperature()));
+                        break;
+                    }
+                }
             }
             intent.putExtra("sms_body",message);
             startActivity(intent);
