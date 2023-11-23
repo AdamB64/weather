@@ -55,7 +55,7 @@ public class ForecastFragment extends Fragment implements View.OnClickListener {
     private String mLocation;
     private int mNumberOfDays;
 
-    public String forecastList;
+    private List<HourForecast> forecastList;
 
     public ForecastFragment() {
         // Required empty public constructor
@@ -125,7 +125,7 @@ public class ForecastFragment extends Fragment implements View.OnClickListener {
                 SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.forecast_date_format));
 
                 // for storing all the weather forecast
-                List<HourForecast> forecastList = new ArrayList<HourForecast>(24*5);
+                forecastList = new ArrayList<HourForecast>(24*5);
 
                 try {
                     // convert text response to a JSON object for processing
@@ -247,9 +247,13 @@ public class ForecastFragment extends Fragment implements View.OnClickListener {
             Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
             startActivity(intent);
         }else if(view.getId()==R.id.btnShareForecast){
-            Intent intent = new Intent(Intent.ACTION_VIEW);
+            Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
-            String message ="forecast for "+mLocation + "\n"+forecastList;
+            String message ="forecast for "+mLocation;
+            if(forecastList!=null && forecastList.size()>0){
+                HourForecast firstHour = forecastList.get(0);
+                message += String.format(" At %s it`ll be %sC ",firstHour.getHour(),String.valueOf(firstHour.getTemperature()));
+            }
             intent.putExtra("sms_body",message);
             startActivity(intent);
         }
