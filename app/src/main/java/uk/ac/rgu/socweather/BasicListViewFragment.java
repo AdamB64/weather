@@ -46,14 +46,14 @@ public class BasicListViewFragment extends Fragment {
     // tag for loggging message
     private static final String TAG = "ForecastFragment";
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    // parameter argument names
+    public static final String ARG_PARAM_LOCATION = LocationConfirmationFragment.ARG_PARAM_LOCATION;
+    public static final String ARG_PARAM_NUMBER_OF_DAYS = LocationConfirmationFragment.ARG_PARAM_NUMBER_OF_DAYS;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    // paramaters
+    private String mLocation;
+    private int mNumberOfDays;
+
 
     public BasicListViewFragment() {
         // Required empty public constructor
@@ -63,16 +63,15 @@ public class BasicListViewFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param location The location to display the forecast for
+     * @param numberOfDays The number of days to get the forecast for.
      * @return A new instance of fragment ForecastFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static uk.ac.rgu.socweather.ForecastFragment newInstance(String param1, String param2) {
+    public static uk.ac.rgu.socweather.ForecastFragment newInstance(String location, int numberOfDays)  {
         uk.ac.rgu.socweather.ForecastFragment fragment = new uk.ac.rgu.socweather.ForecastFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM_LOCATION, location);
+        args.putInt(ARG_PARAM_NUMBER_OF_DAYS, numberOfDays);
         fragment.setArguments(args);
         return fragment;
     }
@@ -81,8 +80,8 @@ public class BasicListViewFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            this.mLocation = getArguments().getString(ARG_PARAM_LOCATION);
+            this.mNumberOfDays = getArguments().getInt(ARG_PARAM_NUMBER_OF_DAYS);
         }
     }
 
@@ -96,11 +95,15 @@ public class BasicListViewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // update the tvForecastLabel text
+        TextView tvForecastLabel = getActivity().findViewById(R.id.tvForecastLabel);
+        tvForecastLabel.setText(getContext().getString(R.string.tvForecastLabelLoading,mLocation));
+
         downloadForecast(view);
     }
 
     private void downloadForecast(View view) {
-        String url = "https://api.weatherapi.com/v1/forecast.json?key=a3b9cc3fb35943d5826152257210311&q=Aberdeen&days=3";
+        String url = String.format("https://api.weatherapi.com/v1/forecast.json?key=a3b9cc3fb35943d5826152257210311&q=%s&days=%d", this.mLocation, this.mNumberOfDays);
 
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -188,6 +191,10 @@ public class BasicListViewFragment extends Fragment {
                                 forecastList
                         );
                         lv.setAdapter(adapter);
+
+                        // update the tvForecastLabel text
+                        TextView tvForecastLabel = getActivity().findViewById(R.id.tvForecastLabel);
+                        tvForecastLabel.setText(getContext().getString(R.string.tvForecastLabel,mLocation));
 
                         // enable the buttons for sharing
                         getActivity().findViewById(R.id.btnShareForecast).setEnabled(true);

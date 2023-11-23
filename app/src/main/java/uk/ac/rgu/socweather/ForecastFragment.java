@@ -1,10 +1,13 @@
 package uk.ac.rgu.socweather;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +41,7 @@ import uk.ac.rgu.socweather.data.HourForecast;
  * Use the {@link ForecastFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ForecastFragment extends Fragment{
+public class ForecastFragment extends Fragment implements View.OnClickListener {
 
     // tag for loggging message
     private static final String TAG = "ForecastFragment";
@@ -95,6 +98,9 @@ public class ForecastFragment extends Fragment{
         // update the tvForecastLabel text
         TextView tvForecastLabel = getActivity().findViewById(R.id.tvForecastLabel);
         tvForecastLabel.setText(getContext().getString(R.string.tvForecastLabelLoading,mLocation));
+
+        Button btnShowMap = view.findViewById(R.id.btnShowLocationMap);
+        btnShowMap.setOnClickListener(this);
 
         downloadForecast();
     }
@@ -208,5 +214,21 @@ public class ForecastFragment extends Fragment{
         RequestQueue rq = Volley.newRequestQueue(getContext());
         // add the request to make it
         rq.add(request);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view.getId()==R.id.btnShowLocationMap){
+            //show the this.mlocation on a map
+            //want to build a URI for the form:0,0?=mlocation
+            Uri.Builder builder = new Uri.Builder();
+            builder.scheme("geo").authority("0,0").appendQueryParameter("q",mLocation);
+            Uri geolocation = builder.build();
+            Intent intent =new Intent(Intent.ACTION_VIEW);
+            intent.setData(geolocation);
+            //if(intent.resolveActivity(getPackageManger())){
+                startActivity(intent);
+            //}
+        }
     }
 }
