@@ -1,9 +1,20 @@
 package uk.ac.rgu.socweather.data;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+import java.security.PrivateKey;
+
 /**
  * This class provides details of the weather forecast for a specific hour of a specific day.
  */
+@Entity(tableName = "HourForecast")
 public class HourForecast {
+
+    @NonNull
+    @PrimaryKey(autoGenerate = true)
+    private int uid;
 
     // the forecasted temp in degress celcius
     private double temperature;
@@ -22,6 +33,9 @@ public class HourForecast {
 
     // the weather icon
     private String iconURL;
+
+    // the location the forecast is for
+    private String location;
 
     public String getIconURL() {
         return iconURL;
@@ -77,6 +91,23 @@ public class HourForecast {
         this.weather = weather;
     }
 
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
+    }
+
     @Override
     public String toString() {
         return "HourForecast{" +
@@ -86,6 +117,7 @@ public class HourForecast {
                 ", date='" + date + '\'' +
                 ", weather='" + weather + '\'' +
                 ", iconURL='" + iconURL + '\'' +
+                ", location='"+ location+'\''+
                 '}';
     }
 }

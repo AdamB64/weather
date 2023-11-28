@@ -1,5 +1,6 @@
 package uk.ac.rgu.socweather;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ import java.util.List;
 
 import uk.ac.rgu.socweather.data.HourForecast;
 import uk.ac.rgu.socweather.data.Utils;
+import uk.ac.rgu.socweather.data.WeatherForecastRepository;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,6 +60,12 @@ public class ForecastFragment extends Fragment implements View.OnClickListener {
     private int mNumberOfDays;
 
     private List<HourForecast> forecastList;
+
+    //for the recycler view
+    ForecastRecyclerViewAdapter mRecyclerViewAdapter;
+
+    //repo for managing data locally
+    private WeatherForecastRepository mWeatherForecastRepo;
 
     public ForecastFragment() {
         // Required empty public constructor
@@ -88,6 +96,7 @@ public class ForecastFragment extends Fragment implements View.OnClickListener {
             this.mLocation = getArguments().getString(ARG_PARAM_LOCATION);
             this.mNumberOfDays = getArguments().getInt(ARG_PARAM_NUMBER_OF_DAYS);
         }
+        this.mWeatherForecastRepo = new WeatherForecastRepository(getContext());
     }
 
     @Override
@@ -104,6 +113,15 @@ public class ForecastFragment extends Fragment implements View.OnClickListener {
         TextView tvForecastLabel = getActivity().findViewById(R.id.tvForecastLabel);
         tvForecastLabel.setText(getContext().getString(R.string.tvForecastLabelLoading,mLocation));
 
+        //setup the recyclerView
+        RecyclerView rv = getActivity().findViewById(R.id.rvForecast);
+        rv.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        this.forecastList = new ArrayList<HourForecast>();
+        mRecyclerViewAdapter = new ForecastRecyclerViewAdapter(getContext(), forecastList);
+        rv.setAdapter(mRecyclerViewAdapter);
+
+
         //set the action handler on the httons
         Button btnShowMap = view.findViewById(R.id.btnShowLocationMap);
         btnShowMap.setOnClickListener(this);
@@ -114,7 +132,25 @@ public class ForecastFragment extends Fragment implements View.OnClickListener {
         Button btnShareForecast = view.findViewById(R.id.btnShareForecast);
         btnShareForecast.setOnClickListener(this);
 
-        downloadForecast();
+
+        //check if we already have a forecast in the database if so load that
+        for (int i=0;i<mNumberOfDays;i++) {
+            Calendar now = Calendar.getInstance();
+            now.add(Calendar.HOUR,(24*i));
+            String date = Utils.getWeatherForecastDateFormat(getContext()).format(now.getTime());
+
+            forecastList.addAll(this.mWeatherForecastRepo.getHourForecasts(this.mLocation, date));
+            if (forecastList.size() !=(24*mNumberOfDays)) {
+                //Display the cached values
+                ProgressBar pg = getActivity().findViewById(R.id.pb_forecastFragment);
+                pg.setVisibility(View.GONE);
+
+                displayForecastView();
+            } else {
+                //Download and store
+                downloadForecast();
+            }
+        }
     }
 
     private void downloadForecast(){
@@ -123,15 +159,30 @@ public class ForecastFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, response);
-                // for formatting the date of the forecast
-                SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.forecast_date_format));
 
                 // for storing all the weather forecast
                 forecastList = new ArrayList<HourForecast>(24*5);
 
+
+                // for formatting the date of the forecast
+                SimpleDateFormat sdf = Utils.getWeatherForecastDateFormat(getContext());
+
+
+
                 try {
                     // convert text response to a JSON object for processing
                     JSONObject rootObj = new JSONObject(response);
+
+                    //Get the location object
+                    JSONObject locationObj = rootObj.getJSONObject("location");
+                    String location =mLocation;
+                    //todo:would like to store the below but wont work
+
+                                    //locationObj.getString("name")+" "
+                                    //+locationObj.getString("region")+ " "
+                                    //+ locationObj.getString("country");
+
+
                     // get the forecast value
                     JSONObject forecastObject = rootObj.getJSONObject("forecast");
                     // get the forecast day value - an array of days
@@ -173,6 +224,7 @@ public class ForecastFragment extends Fragment implements View.OnClickListener {
                             hourForecast.setIconURL(weatherIcon);
                             hourForecast.setHour(hourOfDay);
                             hourForecast.setDate(dayMonth);
+                            hourForecast.setLocation(location);
 
                             // add this hour forecast to the list
                             forecastList.add(hourForecast);
@@ -194,23 +246,13 @@ public class ForecastFragment extends Fragment implements View.OnClickListener {
 
                     // if we have some data, then enable the relevant Views
                     if (forecastList.size() > 0) {
+
+                        //Store the forecast on the device
+                        mWeatherForecastRepo.storeHourForecasts(forecastList);
+
+
                         // display the forecast list
-                        RecyclerView rv = getActivity().findViewById(R.id.rvForecast);
-
-                        ForecastRecyclerViewAdapter adapter = new ForecastRecyclerViewAdapter(getContext(), forecastList);
-
-                        rv.setAdapter(adapter);
-                        rv.setLayoutManager(new LinearLayoutManager(getContext()));
-                        rv.setVisibility(View.VISIBLE);
-
-                        // update the tvForecastLabel text
-                        TextView tvForecastLabel = getActivity().findViewById(R.id.tvForecastLabel);
-                        tvForecastLabel.setText(getContext().getString(R.string.tvForecastLabel,mLocation));
-
-                        // enable the buttons for sharing
-                        getActivity().findViewById(R.id.btnShareForecast).setEnabled(true);
-                        getActivity().findViewById(R.id.btnShowLocationMap).setEnabled(true);
-                        getActivity().findViewById(R.id.btnCheckForecastOnline).setEnabled(true);
+                        displayForecastView();
                     }
                 }
             }
@@ -228,6 +270,23 @@ public class ForecastFragment extends Fragment implements View.OnClickListener {
         rq.add(request);
     }
 
+
+    private void displayForecastView(){
+        mRecyclerViewAdapter.setHourForecasts(forecastList);
+        mRecyclerViewAdapter.notifyDataSetChanged();
+
+        RecyclerView rv = getActivity().findViewById(R.id.rvForecast);
+        rv.setVisibility(View.VISIBLE);
+
+        // update the tvForecastLabel text
+        TextView tvForecastLabel = getActivity().findViewById(R.id.tvForecastLabel);
+        tvForecastLabel.setText(getContext().getString(R.string.tvForecastLabel,mLocation));
+
+        // enable the buttons for sharing
+        getActivity().findViewById(R.id.btnShareForecast).setEnabled(true);
+        getActivity().findViewById(R.id.btnShowLocationMap).setEnabled(true);
+        getActivity().findViewById(R.id.btnCheckForecastOnline).setEnabled(true);
+    }
     @Override
     public void onClick(View view) {
         if(view.getId()==R.id.btnShowLocationMap){

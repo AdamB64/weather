@@ -27,6 +27,10 @@ public class ForecastRecyclerViewAdapter extends RecyclerView.Adapter<ForecastRe
         this.mHourForecasts = data;
     }
 
+    public void setHourForecasts(List<HourForecast> data){
+        this.mHourForecasts =data;
+    }
+
     @NonNull
     @Override
     public ForecastRecyclerViewAdapter.HourForecastViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

@@ -1,8 +1,13 @@
 package uk.ac.rgu.socweather.data;
 
+import android.content.Context;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
+
+import java.text.SimpleDateFormat;
+
+import uk.ac.rgu.socweather.R;
 
 /**
  * Some utility functions
@@ -22,5 +27,15 @@ public class Utils {
         Uri.Builder uriBuilder = geoLocation.buildUpon();
         uriBuilder.appendQueryParameter(paramName, paramValue);
         return uriBuilder.build();
+    }
+
+    /***
+     *
+     * @return a SimpleDateFormat for formating the date
+     */
+    public static SimpleDateFormat getWeatherForecastDateFormat(Context context){
+        // for formatting the date of the forecast
+        SimpleDateFormat sdf = new SimpleDateFormat(context.getString(R.string.forecast_date_format));
+        return sdf;
     }
 }
